@@ -1,7 +1,7 @@
 #include "usbIO.h"
 #include "ledIO.h"
 #include "lcdIO.h"
-#include "string.h"
+#include <string.h>
 
 /*
 library for writing a menu
@@ -44,16 +44,23 @@ void menu_push(char * item, int len_item){
 void menu_make(int len, char **items){
     switch (DBG_menu){
         case 1:
-            lcd_init();
+            write_usb_serial_blocking("make menu \r\n", 12);
     }
     lcd_init();
     menu_top = 0;
     int i = 0;
     menu_len = len;
+    write_usb_serial_blocking("fin init \r\n", 11);
     for(i = 0; i < len; i++){
-        char tmp_str[] = " ";
+        char *tmp_str;
+        char *tmp_str_out;
+        strcat(tmp_str, " ");
+        strcat(tmp_str_out, " ");
         strcat(tmp_str, items[i]);
         strcat(tmp_str, "\n");
+        strcat(tmp_str_out, items[i]);
+        strcat(tmp_str_out, "\t\n");
+        write_usb_serial_blocking(tmp_str_out, 1);
         //tmp_menu[i].item = *tmp_str;
         strcpy(tmp_menu[i].item, tmp_str);
         tmp_menu[i].len = strlen(tmp_str);

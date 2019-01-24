@@ -1,7 +1,9 @@
 #include "lcd_menu.h"
 
 void main (){
+    serial_init();
     setup_leds();
+    write_usb_serial_blocking("-------------------- \n\r", 23);
     write_leds(1);
     char *string_database[5]={'\0'};
     string_database[0]="Florida";
@@ -22,4 +24,5 @@ void main (){
         menu_up();
     }
     write_leds(5);
+    write_usb_serial_blocking("-------------------- \n\r", 23);
 }

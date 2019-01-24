@@ -1,25 +1,28 @@
-#include "lcdIO.h"
-#include "usbIO.h"
+#include "lcd_menu.h"
 
-void main(){
+void main (){
     serial_init();
     setup_leds();
-    lcd_init();
     write_usb_serial_blocking("-------------------- \n\r", 23);
-    /*
-    lcd_clear();
-    lcd_write("hi ", 3);
-    Delay(20);
-    lcd_write("abcdefghijklmnopqrstuvwxyz", 26);
-    Delay(20);
-    lcd_clear();
-    lcd_write("line one \nline two", 18);
-    Delay(20);
-    lcd_gohome();
-    lcd_write("overwrite", 9);
-    */
-    lcd_clear();
-    Delay(10);
-    lcd_write("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz", 34);
+    write_leds(1);
+    char *string_database[5]={'\0'};
+    string_database[0]="Florida";
+    string_database[1]="Oregon";
+    string_database[2]="California";
+    string_database[3]="Georgia";
+    int i;
+    write_leds(2);
+    menu_make(3, string_database);
+    write_leds(3);
+    for (i = 0; i < 10; i ++){
+        Delay(400);
+        menu_down();
+    }
+    write_leds(4);
+    for (i = 0; i < 10; i ++){
+        Delay(400);
+        menu_up();
+    }
+    write_leds(5);
     write_usb_serial_blocking("-------------------- \n\r", 23);
 }
