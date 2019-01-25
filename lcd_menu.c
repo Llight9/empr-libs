@@ -52,15 +52,13 @@ void menu_make(int len, char **items){
     menu_len = len;
     write_usb_serial_blocking("fin init \r\n", 11);
     for(i = 0; i < len; i++){
-        char *tmp_str;
-        char *tmp_str_out;
-        strcat(tmp_str, " ");
-        strcat(tmp_str_out, " ");
+        char tmp_str[20] = " ";
+        char tmp_str_out[21] = " ";
         strcat(tmp_str, items[i]);
         strcat(tmp_str, "\n");
         strcat(tmp_str_out, items[i]);
-        strcat(tmp_str_out, "\t\n");
-        write_usb_serial_blocking(tmp_str_out, 1);
+        strcat(tmp_str_out, "\r\n");
+        write_usb_serial_blocking(tmp_str_out, 21);
         //tmp_menu[i].item = *tmp_str;
         strcpy(tmp_menu[i].item, tmp_str);
         tmp_menu[i].len = strlen(tmp_str);
