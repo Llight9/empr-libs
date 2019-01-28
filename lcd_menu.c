@@ -54,7 +54,7 @@ void menu_make(int len, char **items){
     write_usb_serial_blocking("fin init \r\n", 11);
     menu_top = 0;
     int i = 0;
-    menu_len = len;
+    menu_len = len - 1;
     for(i = 0; i < len; i++){
         char tmp_str[20] = " ";
         char tmp_str_out[21] = " ";
@@ -106,6 +106,7 @@ void menu_down(){
     switch (menu_top == menu_len){
         case 0:
             menu_top++;
+            break;
         default:
             menu_top = 0;
     }
@@ -115,6 +116,7 @@ void menu_up(){
     switch (menu_top == 0){
         case 0:
             menu_top--;
+            break;
         default:
             menu_top = menu_len;
     }
