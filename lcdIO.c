@@ -76,6 +76,7 @@ char lcd_convert(char chr_in){
                 return 190;
             case '\n':
                lcd_breakline(chr_buffer);
+               return 160;
             case '<':
                 return 188;
             case 0 :
@@ -105,7 +106,7 @@ void lcd_breakline(int length){
 void lcd_write(char * str_out, int length){
     int i;
     //char buff[5];
-    write_usb_serial_blocking("lcd_write \n\r", 12);
+    //write_usb_serial_blocking("lcd_write \n\r", 12);
     for(i=0; i < length; i++){
         //sprintf(buff, "%c \n\r", *str_out);
         //write_usb_serial_blocking(buff, 4);
@@ -130,7 +131,7 @@ void lcd_append(char chr_out){
         data[0] = 0x40;
         data[1] = chr_form;
         I2Csend(LCD_ADDRESS, data, 2);
-        write_usb_serial_blocking("line break\r\n", 12);
+        //write_usb_serial_blocking("line break\r\n", 12);
         lcd_breakline(16);
     }else{
         lcd_gohome();

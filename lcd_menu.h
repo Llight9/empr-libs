@@ -1,7 +1,7 @@
 #include "usbIO.h"
 #include "ledIO.h"
 #include "lcdIO.h"
-#include "string.h"
+#include <string.h>
 
 /*
 library for writing a menu
@@ -22,3 +22,5 @@ void menu_down(void);
 // increments the menu down
 void menu_up(void);
 // decrements the menu up
+void menu_print(void);
+// prints the menu

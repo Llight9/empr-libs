@@ -10,19 +10,23 @@ void main (){
     string_database[1]="Oregon";
     string_database[2]="California";
     string_database[3]="Georgia";
-    int i;
+    //int i;
     write_leds(2);
     menu_make(4, string_database);
     write_leds(3);
+    menu_print();
+    //menu_down();
+    /*
     for (i = 0; i < 10; i ++){
-        Delay(400);
+        Delay(4);
         menu_down();
     }
     write_leds(4);
     for (i = 0; i < 10; i ++){
-        Delay(400);
+        Delay(4);
         menu_up();
     }
+    */
     write_leds(5);
     write_usb_serial_blocking("-------------------- \n\r", 23);
 }
