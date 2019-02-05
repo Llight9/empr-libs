@@ -24,7 +24,7 @@ void screen_read(char *buf){
     read_usb_serial_none_blocking(buf, len);
 }
 
-void screen_breakline(void);
+void screen_breakline(void){
     write_usb_serial_blocking("**************************************************\r\n", 52);
 
 }
