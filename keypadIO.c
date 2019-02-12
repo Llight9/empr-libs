@@ -36,7 +36,7 @@ void keypad_disable(void){
 	NVIC_DisableIRQ(EINT3_IRQn);
 }
 
-char keypad_get(void);
+//char keypad_get(void);
 
 char keypad_convert(int keypadbyte){
 	int localkeypadbyte= ~keypadbyte;
