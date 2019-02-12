@@ -1,8 +1,3 @@
-/*
-   for testing only
-   not for use
-*/
-
 #include "lpc17xx_i2c.h"
 #include "lpc17xx_gpio.h"
 #include "lpc17xx_pincel.h"
