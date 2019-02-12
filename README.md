@@ -26,3 +26,7 @@ The following files are librarys
 ## Compalation
 
 Use the compile.sh scrpit
+
+# TODO
+
+1. wright keypad test file
