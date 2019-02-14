@@ -1,5 +1,5 @@
 #include "empr-libs/screenIO.h"
-#include "lpc17xx_types.h"
+#include "lpc17_types.h"
 
 #define BUFFER_SIZE             0x400
 #define I2S_BUFFER_SRC          LPC_AHBRAM1_BASE

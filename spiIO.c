@@ -3,6 +3,7 @@
 #include "lpc17xx_pinsel.h"
 #include "debug_frmwrk.h"
 #include "lpc17xx_spi.h"
+#include "lpc_types.h"
 
 #define BUFFER_SIZE             0x400
 #define I2S_BUFFER_SRC          LPC_AHBRAM1_BASE
