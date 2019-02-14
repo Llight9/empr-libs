@@ -2,7 +2,7 @@
 #include "lpc17xx_gpio.h"
 #include "lpc17xx_pinsel.h"
 #include "lpc17xx_uart.h"
-#include "lpc17xx_exiti.h"
+#include "lpc17xx_exti.h"
 #include "lpc17xx_libcfg.h"
 #include "lpc_types.h"
 #include "usbIO.h"
