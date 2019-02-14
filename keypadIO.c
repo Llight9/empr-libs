@@ -1,7 +1,7 @@
 #include "lpc17xx_i2c.h"
 #include "lpc17xx_gpio.h"
 #include "lpc17xx_pinsel.h"
-#include "lpc17x_uart.h"
+#include "lpc17xx_uart.h"
 #include "lpc17xx_exiti.h"
 #include "lpc17xx_libcfg.h"
 #include "lpc_types.h"
