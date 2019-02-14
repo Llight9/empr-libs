@@ -8,7 +8,7 @@
 long leds[4];
 
 /*
-typedef struct{ 
+typedef struct{
   uint32_t sl_addr7bit;
   uint8_t* tx_data;
   uint32_t tx_length;
@@ -136,7 +136,7 @@ int main()
       //GPIO_SetValue(1, leds[1]);
     }
   }
-  
+
   char buffer[36];
   sprintf(buffer, "%i devices connected to i2c bus\r\n", count);
   write_usb_serial_blocking(buffer, sizeof(buffer));
@@ -145,14 +145,14 @@ int main()
   //clearLCD();
   /*break;
       default:*/
-	
+
 	/*break;
 	  }*/
   /*int i = 0;
    for(i = 0x00; i=<0xFF; i++)
   {
     I2C_MasterTransferData(LPC_I2C1, &yes, I2C_TRANSFER_POLLING);
-    } */ 
+    } */
   //ledcounter();
   return 0;
 }

@@ -2,8 +2,8 @@
 #include "lpc17xx_i2s.h"
 #include "lpc17xx_pinsel.h"
 #include "debug_frmwrk.h"
+#include "lpc17xx_gpio.h"
 #include "lpc17xx_spi.h"
-#include "lpc_types.h"
 
 #define BUFFER_SIZE             0x400
 #define I2S_BUFFER_SRC          LPC_AHBRAM1_BASE
@@ -23,6 +23,10 @@
 #define MBEDAUDIO_REG_DIGITALACTIVATION     0x1200
 #define MBEDAUDIO_REG_RESET                 0x1E00
 
+void spi_write(uint16_t buff[], int len);
+void spi_bypass(void);
+uint32_t sd_polling(void* tx_buf, void* rx_buf, uint32_t length);
+void CS_Force(int32_t state);
 
 void CS_Force(int32_t state){
     switch (state) {
@@ -37,6 +41,7 @@ void CS_Force(int32_t state){
 
 uint32_t sd_polling(void* tx_buf, void* rx_buf, uint32_t length){
 	CS_Force(0);
+  SPI_DATA_SETUP_Type xferConfig;
 	xferConfig.tx_data = tx_buf;
 	xferConfig.rx_data = rx_buf;
 	xferConfig.length = length;
@@ -47,7 +52,7 @@ uint32_t sd_polling(void* tx_buf, void* rx_buf, uint32_t length){
 
 void spi_init(void){
     PINSEL_CFG_Type PinCfg;
-    SPI_DATA_SETUP_Type xferConfig;
+//    SPI_DATA_SETUP_Type xferConfig;
 	SPI_CFG_Type SPI_cfgstruct;
 	PinCfg.Funcnum = 0;
 	PinCfg.OpenDrain = 0;
@@ -80,4 +85,3 @@ void spi_write(uint16_t buff[], int len){
         sd_polling(&buff[i], NULL, 2);
     }
 }
-
