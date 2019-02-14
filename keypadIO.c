@@ -7,6 +7,7 @@
 #include "lpc_types.h"
 #include "usbIO.h"
 #include "empr-libs/delay.h"
+#include "empr-libs/ledIO.h"
 
 void keypad_init(void){
     int LCDaddress = 59;
@@ -60,7 +61,6 @@ char keypad_handler(void){
 	int result = 0;
 	uint8_t temp[1];
 	if(GPIO_GetIntStatus(0, 23, 1)){
-		LEDturnon(8);
 		result = I2CrecCommand(1,33);
 		temp[0] = 0xf0;
 		I2Csendcommand(temp,1,33);
