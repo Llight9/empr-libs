@@ -9,6 +9,24 @@
 #include "empr-libs/delay.h"
 #include "empr-libs/ledIO.h"
 
+//in development
+
+void keypad_init(void);
+
+void keypad_enable(void);
+
+void keypad_disable(void);
+
+//char keypad_get(void);
+
+char keypad_convert(int keypadbyte);
+
+char keypad_handler(void);
+
+int keypad_send(int size, int address);
+
+
+
 void keypad_init(void){
     int LCDaddress = 59;
     int KeypadResponse[16];
