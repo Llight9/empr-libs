@@ -24,5 +24,3 @@ void spi_init(void);
 void spi_bypass(void);
 
 void spi_write(uint16_t buff[], int len);
-
-void CS_Force(int32_t state);
