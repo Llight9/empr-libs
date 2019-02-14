@@ -23,6 +23,11 @@
 #define MBEDAUDIO_REG_DIGITALACTIVATION     0x1200
 #define MBEDAUDIO_REG_RESET                 0x1E00
 
+void CS_Force(int32_t state);
+uint32_t sd_polling(void* tx_buf, void* rx_buf, uint32_t length);
+void spi_init(void);
+void spi_bypass(void);
+void spi_write(uint16_t buff[], int len);
 
 void CS_Force(int32_t state){
     switch (state) {
