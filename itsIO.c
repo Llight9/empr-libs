@@ -1,5 +1,4 @@
 #include "lpc17xx_i2s.h"
-//#include "lpc17xx_libcfg.h"
 #include "lpc17xx_pinsel.h"
 #include "debug_frmwrk.h"
 #include "lpc17xx_spi.h"
