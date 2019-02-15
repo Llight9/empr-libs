@@ -25,13 +25,13 @@
 #define ROUT_VALUE 0xFF //011111111
 //Controls the analog path register 0x04
 #define MBEDAUDIO_REG_ANALOGPATH  0x800
-#define ANALOGPATH_VALUE 0x15 //000010101 //if anything is wrong its probably this
+#define ANALOGPATH_VALUE 0x00 //000000000 //if anything is wrong its probably this
 //Controls the digital path register 0x05
 #define MBEDAUDIO_REG_DIGITALPATH  0xA00
 #define DIGITALPATH_VALUE 0x04 //000000100
 //Controls power to various components i.e. DAC 0x06
 #define MBEDAUDIO_REG_POWER  0xC00
-#define POWER_VALUE 0x07 //000000111
+#define POWER_VALUE 0x00 //000000000
 //Controls the digital interface path i.e. filters 0x07
 #define MBEDAUDIO_REG_DIGITALINTERFACE  0xE00
 #define DIGITALINTERFACE_VALUE 0x2 //000000010
@@ -40,7 +40,7 @@
 #define SAMPLERATE_VALUE 0x0C //000001100
 //Enables various digital components 0x09
 #define MBEDAUDIO_REG_DIGITALACTIVATION  0x1200
-#define DIGITALACTIVATION_VALUE 0x1 //0000000001
+#define DIGITALACTIVATION_VALUE 0x01 //0000000001
 //Resets all registers to their default state 0x0F
 #define MBEDAUDIO_REG_RESET 0x1E00
 
