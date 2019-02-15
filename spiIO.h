@@ -29,10 +29,6 @@
 #define DIGITALACTIVATION_VALUE 0x1 //0000000001
 #define MBEDAUDIO_REG_RESET 0x1E00
 
-PINSEL_CFG_Type PinCfg;
-
-SPI_DATA_SETUP_Type xferConfig;
-
 void spi_init(void);
 
 void spi_bypass(void);

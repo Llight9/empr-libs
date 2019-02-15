@@ -25,6 +25,9 @@ void screen_read(char *buf){
 }
 
 void screen_breakline(void){
-    write_usb_serial_blocking("**************************************************\r\n", 52);
+    write_usb_serial_blocking("**************************************************\n\r", 52);
+}
 
+void screen_newline(void){
+    write_usb_serial_blocking(" \n\r", 3);
 }

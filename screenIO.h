@@ -5,3 +5,5 @@ void screen_write(char *buf);
 void screen_read(char *buf);
 
 void screen_breakline(void);
+
+void screen_newline(void);
