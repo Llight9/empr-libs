@@ -45,7 +45,7 @@ void its_init(int cfg){
             I2S_ConfigStruct.ws_sel = I2S_MASTER_MODE;
             I2S_ConfigStruct.mute = I2S_MUTE_DISABLE;
             I2S_Config(LPC_I2S,I2S_TX_MODE,&I2S_ConfigStruct);
-            I2S_ConfigStruct.ws_sel = I2S_SLAVE_MODE;
+            I2S_ConfigStruct.ws_sel = I2S_MASTER_MODE;
             I2S_Config(LPC_I2S,I2S_RX_MODE,&I2S_ConfigStruct);
             I2S_ClkConfig.clksel = I2S_CLKSEL_FRDCLK;
             I2S_ClkConfig.fpin = I2S_4PIN_DISABLE;
@@ -63,7 +63,7 @@ void its_init(int cfg){
             I2S_ConfigStruct.ws_sel = I2S_MASTER_MODE;
             I2S_ConfigStruct.mute = I2S_MUTE_DISABLE;
             I2S_Config(LPC_I2S,I2S_TX_MODE,&I2S_ConfigStruct);
-            I2S_ConfigStruct.ws_sel = I2S_SLAVE_MODE;
+            I2S_ConfigStruct.ws_sel = I2S_MASTER_MODE;
             I2S_Config(LPC_I2S,I2S_RX_MODE,&I2S_ConfigStruct);
             I2S_ClkConfig.clksel = I2S_CLKSEL_FRDCLK;
             I2S_ClkConfig.fpin = I2S_4PIN_DISABLE;
