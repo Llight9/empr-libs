@@ -25,7 +25,7 @@
 #define ROUT_VALUE 0xFF //011111111
 //Controls the analog path register 0x04
 #define MBEDAUDIO_REG_ANALOGPATH  0x800
-#define ANALOGPATH_VALUE 0x00 //000000000 //if anything is wrong its probably this
+#define ANALOGPATH_VALUE 0x01 //000000000 //if anything is wrong its probably this
 //Controls the digital path register 0x05
 #define MBEDAUDIO_REG_DIGITALPATH  0xA00
 #define DIGITALPATH_VALUE 0x04 //000000100
