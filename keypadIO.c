@@ -22,10 +22,6 @@ int Inputbufferpos = 0;
 
 void keypad_init(void);
 
-void keypad_enable(void);
-
-void keypad_disable(void);
-
 //char keypad_get(void);
 
 char keypad_convert(int keypadbyte);
@@ -42,7 +38,6 @@ void I2Cinit(void) {
 	PinCfg.Funcnum = 3;
 	PinCfg.OpenDrain = 0;
 	PinCfg.Pinmode = 0;
-
 	PinCfg.Portnum = 0;
 	PinCfg.Pinnum = 1;
 	PINSEL_ConfigPin(&PinCfg);
@@ -112,14 +107,6 @@ void keypad_init(void){
 	PINSEL_ConfigPin(&PinCfg);
 	I2C_Init(LPC_I2C1, 100000);
 	I2C_Cmd(LPC_I2C1, ENABLE);
-}
-
-void keypad_enable(void){
-	NVIC_EnableIRQ(EINT3_IRQn);
-}
-
-void keypad_disable(void){
-	NVIC_DisableIRQ(EINT3_IRQn);
 }
 
 //char keypad_get(void);
