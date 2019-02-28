@@ -89,9 +89,8 @@ typedef struct node {
 typedef struct node {
     node * parent;
     int child_num;
-    int data_len;
-    char * data[data_len];
-    int data_item_len[data_len];
+    char * data[child_num];
+    int data_item_len[child_num];
     node * children[child_num];
 } node;
 
@@ -123,18 +122,18 @@ typedef struct menu_status {
 
 
 const node head;
-    const node menu_audio_out;
-        const node menu_out_fast;
-        const node menu_out_normal;
-        const node menu_out_formats;
-        const node menu_out_quality;
-        const node menu_out_effects;
     const node menu_audio_in;
         const node menu_in_fast;
         const node menu_in_normal;
         const node menu_in_formats;
         const node menu_in_quality;
         const node menu_in_effects;
+    const node menu_audio_out;
+        const node menu_out_fast;
+        const node menu_out_normal;
+        const node menu_out_formats;
+        const node menu_out_quality;
+        const node menu_out_effects;
     const node menu_audio_both;
         const node menu_bypass;
         const node menu_in_out;
@@ -144,7 +143,6 @@ const node head;
 
 head.parent = NULL;
 head.child_num = 3;
-head.data_len = 3;
 head.data_item = {'\0'};
 head.data_item[0] = "audio in";
 head.data_item[1] = "audio out";
@@ -158,7 +156,6 @@ head.children = {
 
 menu_audio_in.parent = &head;
 menu_audio_in.child_num = 5;
-menu_audio_in.data_len = 5;
 menu_audio_in.data_item = {'\0'};
 menu_audio_in.data_item[0] = "fast"   ;
 menu_audio_in.data_item[1] = "normal" ;
@@ -174,10 +171,20 @@ menu_audio_in.children = {
     & menu_in_effects ,
 };
 
+menu_in_fast.parent = &menu_audio_in;
+menu_in_fast.child_num = 0;
+
+menu_in_normal.parent = &menu_audio_in;
+menu_in_normal.child_num = 0;
+
+menu_in_formats.parent = &menu_audio_in;
+menu_in_formats.child_num = 2;
+menu_in_formats.data_item = {'\0'};
+menu_in_formats.data_item[0] = "lossy"   ;
+menu_in_formats.data_item[1] = "lossless" ;
+
 menu_audio_out.parent = &head;
 menu_audio_out.child_num = 5;
-menu_audio_out.data_len = 5;
-menu_audio_out.data_item = {'\0'};
 menu_audio_out.data_item[0] = "fast"   ;
 menu_audio_out.data_item[1] = "normal" ;
 menu_audio_out.data_item[2] = "formats";
@@ -194,7 +201,6 @@ menu_audio_out.children = {
 
 menu_audio_both.parent = &head;
 menu_audio_both.child_num = 3;
-menu_audio_both.data_len = 3;
 menu_audio_both.data_item = {'\0'};
 menu_audio_both.data_item[0] = "bypass";
 menu_audio_both.data_item[1] = "in out";
