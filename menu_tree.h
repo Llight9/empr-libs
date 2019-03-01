@@ -11,11 +11,15 @@ typedef struct node{
     struct node * parent;
     int child_num;
     int data_num;
-    char * data[data_num];
+    char * data[10];
     int data_item_len[data_num];
     int data_type;
-    struct node * children[child_num];
+    struct node * children[10];
 } node;
+
+// node.data = (char**) malloc(size * sizeof(char*));
+//
+// free(node.data);
 
 typedef struct {
     int speed;
