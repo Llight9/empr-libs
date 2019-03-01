@@ -4,6 +4,10 @@
 #define audio_type_out      2
 #define audio_type_bypass   3
 
+#define menu_type_list      1
+#define menu_type_selc      2
+#define menu_type_opti      3
+
 #define main_menu {                             \
                    {                            \
                         {"audio in", 8},        \
@@ -89,8 +93,10 @@ typedef struct node {
 typedef struct node {
     node * parent;
     int child_num;
-    char * data[child_num];
-    int data_item_len[child_num];
+    int data_num;
+    char * data[data_num];
+    int data_item_len[data_num];
+    int data_type;
     node * children[child_num];
 } node;
 
@@ -143,11 +149,13 @@ const node head;
 
 head.parent = NULL;
 head.child_num = 3;
+head.data_num = 3;
 head.data_item = {'\0'};
 head.data_item[0] = "audio in";
 head.data_item[1] = "audio out";
 head.data_item[2] = "both";
 head.data_item_len = {8, 9, 4};
+head.data_type = menu_type_list;
 head.children = {
     & menu_audio_in ,
     & menu_audio_out ,
@@ -156,12 +164,14 @@ head.children = {
 
 menu_audio_in.parent = &head;
 menu_audio_in.child_num = 5;
+menu_audio_in.data_num = 5;
 menu_audio_in.data_item = {'\0'};
-menu_audio_in.data_item[0] = "fast"   ;
-menu_audio_in.data_item[1] = "normal" ;
+menu_audio_in.data_item[0] = "fast";
+menu_audio_in.data_item[1] = "normal";
 menu_audio_in.data_item[2] = "formats";
 menu_audio_in.data_item[3] = "quality";
 menu_audio_in.data_item[4] = "effects";
+head.data_type = menu_type_list;
 menu_audio_in.data_item_len = {4, 6, 7, 7, 7};
 menu_audio_in.children = {
     & menu_in_fast ,
@@ -173,15 +183,28 @@ menu_audio_in.children = {
 
 menu_in_fast.parent = &menu_audio_in;
 menu_in_fast.child_num = 0;
+menu_in_fast.data_num = 1;
+menu_audio_in.data_item = {'\0'};
+menu_audio_in.data_item[0] = "play";
+menu_audio_in.data_type = menu_type_selc;
+menu_audio_in.data_item_len = {4};
 
 menu_in_normal.parent = &menu_audio_in;
 menu_in_normal.child_num = 0;
+menu_in_normal.data_num = 1;
+menu_in_normal.data_item = {'\0'};
+menu_in_normal.data_item[0] = "play";
+menu_in_normal.data_type = menu_type_selc;
+menu_in_normal.data_item_len = {4};
 
 menu_in_formats.parent = &menu_audio_in;
-menu_in_formats.child_num = 2;
+menu_in_formats.child_num = 0;
+menu_in_formats.data_num = 2;
 menu_in_formats.data_item = {'\0'};
 menu_in_formats.data_item[0] = "lossy"   ;
 menu_in_formats.data_item[1] = "lossless" ;
+menu_in_normal.data_type = menu_type_opti;
+menu_in_formats.data_item_len = {5, 6};
 
 menu_audio_out.parent = &head;
 menu_audio_out.child_num = 5;
