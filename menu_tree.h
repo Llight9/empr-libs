@@ -7,7 +7,7 @@
 #define menu_type_opt         3
 #define menu_type_multi_opt   4
 
-typedef struct node {
+typedef struct {
     node * parent;
     int child_num;
     int data_num;
@@ -17,24 +17,24 @@ typedef struct node {
     node * children[child_num];
 } node;
 
-typedef struct effect_data {
+typedef struct {
     int speed;
     int pitch_shift;
 } effect_data;
 
-typedef struct format_data {
+typedef struct {
     int loss;
 } format_data;
 
-typedef struct quality_data {
+typedef struct {
     int quality
 } quality_data;
 
-typedef struct quality_data {
+typedef struct {
     int quality
 } quality_data;
 
-typedef struct menu_status {
+typedef struct {
     int audio_type;
     format_data format_type;
     quality_data quality_type;
