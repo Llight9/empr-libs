@@ -12,7 +12,7 @@ typedef struct node{
     int child_num;
     int data_num;
     char * data[10];
-    int data_item_len[data_num];
+    int data_item_len[10];
     int data_type;
     struct node * children[10];
 } node;
