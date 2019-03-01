@@ -31,21 +31,17 @@ typedef struct {
 } quality_data;
 
 typedef struct {
-    int quality
-} quality_data;
-
-typedef struct {
     int audio_type;
     format_data format_type;
     quality_data quality_type;
     effect_data effect_type;
 } menu_status;
 
-void menu_init(void);
-void menu_up(void);
-void menu_down(void);
-void menu_forward();
-void menu_back();
-menu_status menu_select(void);
-int menu_type(void);
-void exit_menu(void);
+void menu_tree_init(void);
+void menu_tree_up(void);
+void menu_tree_down(void);
+void menu_tree_forward();
+void menu_tree_back();
+menu_status menu_tree_select(void);
+int menu_tree_type(void);
+void menu_tree_exit(void);

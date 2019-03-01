@@ -29,11 +29,7 @@ typedef struct {
 } format_data;
 
 typedef struct {
-    int quality
-} quality_data;
-
-typedef struct {
-    int quality
+    int quality;
 } quality_data;
 
 typedef struct {
@@ -231,16 +227,16 @@ menu_audio_both.children = {
 };
 
 
-void menu_init(void);
-void menu_up(void);
-void menu_down(void);
-void menu_forward();
-void menu_back();
-menu_status menu_select(void);
-int menu_type(void);
-void exit_menu(void);
+void menu_tree_init(void);
+void menu_tree_up(void);
+void menu_tree_down(void);
+void menu_tree_forward();
+void menu_tree_back();
+menu_status menu_tree_select(void);
+int menu_tree_type(void);
+void menu_tree_exit(void);
 
 
-void menu_init(){
+void menu_tree_init(){
     menu_make(head.data_num, head.data_item);
 }
