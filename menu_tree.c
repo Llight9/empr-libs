@@ -1,12 +1,13 @@
 #include "empr-libs/lcd_menu.h"
 
-#define audio_type_in       1
-#define audio_type_out      2
-#define audio_type_bypass   3
+#define audio_type_in         1
+#define audio_type_out        2
+#define audio_type_bypass     3
 
-#define menu_type_list      1
-#define menu_type_selc      2
-#define menu_type_opti      3
+#define menu_type_list        1
+#define menu_type_selc        2
+#define menu_type_opt         3
+#define menu_type_multi_opt   4
 
 #define main_menu {                             \
                    {                            \
@@ -76,19 +77,6 @@
                     }                           \
                 }
 
-/*
-typedef struct data_item {
-    int item_len;
-    char * item_name;
-} data_item;
-
-typedef struct node {
-    int child_num;
-    int data_len;
-    data_item data[data_len];
-    node children[child_num];
-} node;
-*/
 
 typedef struct node {
     node * parent;
@@ -171,7 +159,7 @@ menu_audio_in.data_item[1] = "normal";
 menu_audio_in.data_item[2] = "formats";
 menu_audio_in.data_item[3] = "quality";
 menu_audio_in.data_item[4] = "effects";
-head.data_type = menu_type_list;
+menu_audio_in.data_type = menu_type_list;
 menu_audio_in.data_item_len = {4, 6, 7, 7, 7};
 menu_audio_in.children = {
     & menu_in_fast ,
@@ -199,12 +187,36 @@ menu_in_normal.data_item_len = {4};
 
 menu_in_formats.parent = &menu_audio_in;
 menu_in_formats.child_num = 0;
-menu_in_formats.data_num = 2;
+menu_in_formats.data_num = 3;
 menu_in_formats.data_item = {'\0'};
-menu_in_formats.data_item[0] = "lossy"   ;
-menu_in_formats.data_item[1] = "lossless" ;
-menu_in_normal.data_type = menu_type_opti;
-menu_in_formats.data_item_len = {5, 6};
+menu_in_formats.data_item[0] = "lossy";
+menu_in_formats.data_item[1] = "lossless";
+menu_in_formats.data_item[2] = "normal";
+menu_in_formats.data_type = menu_type_opt;
+menu_in_formats.data_item_len = {5, 8, 6};
+
+menu_in_quality.parent = &menu_audio_in;
+menu_in_quality.child_num = 0;
+menu_in_quality.data_num = 6;
+menu_in_quality.data_item = {'\0'};
+menu_in_quality.data_item[0] = "worst";
+menu_in_quality.data_item[1] = "bad";
+menu_in_quality.data_item[2] = "normal";
+menu_in_quality.data_item[3] = "good";
+menu_in_quality.data_item[4] = "better";
+menu_in_quality.data_item[5] = "best";
+menu_in_quality.data_type = menu_type_opt;
+menu_in_quality.data_item_len = {5, 3, 6, 4, 6, 4};
+
+menu_in_formats.parent = &menu_audio_in;
+menu_in_formats.child_num = 0;
+menu_in_formats.data_num = 3;
+menu_in_formats.data_item = {'\0'};
+menu_in_formats.data_item[0] = "a";
+menu_in_formats.data_item[1] = "b";
+menu_in_formats.data_item[2] = "c";
+menu_in_formats.data_type = menu_type_multi_opt;
+menu_in_formats.data_item_len = {1, 1, 1};
 
 menu_audio_out.parent = &head;
 menu_audio_out.child_num = 5;
@@ -214,6 +226,7 @@ menu_audio_out.data_item[2] = "formats";
 menu_audio_out.data_item[3] = "quality";
 menu_audio_out.data_item[4] = "effects";
 menu_audio_out.data_item_len = {4, 6, 7, 7, 7};
+menu_audio_out.data_type = menu_type_list;
 menu_audio_out.children = {
     & menu_out_fast ,
     & menu_out_normal ,
@@ -222,6 +235,55 @@ menu_audio_out.children = {
     & menu_out_effects ,
 };
 
+menu_out_fast.parent = &menu_audio_out;
+menu_out_fast.child_num = 0;
+menu_out_fast.data_num = 1;
+menu_audio_out.data_item = {'\0'};
+menu_audio_out.data_item[0] = "recd";
+menu_audio_out.data_type = menu_type_selc;
+menu_audio_out.data_item_len = {4};
+
+menu_out_normal.parent = &menu_audio_out;
+menu_out_normal.child_num = 0;
+menu_out_normal.data_num = 1;
+menu_out_normal.data_item = {'\0'};
+menu_out_normal.data_item[0] = "recd";
+menu_out_normal.data_type = menu_type_selc;
+menu_out_normal.data_item_len = {4};
+
+menu_out_formats.parent = &menu_audio_out;
+menu_out_formats.child_num = 0;
+menu_out_formats.data_num = 3;
+menu_out_formats.data_item = {'\0'};
+menu_out_formats.data_item[0] = "lossy";
+menu_out_formats.data_item[1] = "lossless";
+menu_out_formats.data_item[2] = "normal";
+menu_out_formats.data_type = menu_type_opt;
+menu_out_formats.data_item_len = {5, 8, 6};
+
+menu_out_quality.parent = &menu_audio_out;
+menu_out_quality.child_num = 0;
+menu_out_quality.data_num = 6;
+menu_out_quality.data_item = {'\0'};
+menu_out_quality.data_item[0] = "worst";
+menu_out_quality.data_item[1] = "bad";
+menu_out_quality.data_item[2] = "normal";
+menu_out_quality.data_item[3] = "good";
+menu_out_quality.data_item[4] = "better";
+menu_out_quality.data_item[5] = "best";
+menu_out_quality.data_type = menu_type_opt;
+menu_out_quality.data_item_len = {5, 3, 6, 4, 6, 4};
+
+menu_out_formats.parent = &menu_audio_out;
+menu_out_formats.child_num = 0;
+menu_out_formats.data_num = 3;
+menu_out_formats.data_item = {'\0'};
+menu_out_formats.data_item[0] = "a";
+menu_out_formats.data_item[1] = "b";
+menu_out_formats.data_item[2] = "c";
+menu_out_formats.data_type = menu_type_multi_opt;
+menu_out_formats.data_item_len = {1, 1, 1};
+
 menu_audio_both.parent = &head;
 menu_audio_both.child_num = 3;
 menu_audio_both.data_item = {'\0'};
@@ -229,6 +291,7 @@ menu_audio_both.data_item[0] = "bypass";
 menu_audio_both.data_item[1] = "in out";
 menu_audio_both.data_item[2] = "out in";
 menu_audio_both.data_item_len = {6, 6, 6};
+menu_audio_both.dtat_type = menu_type_selc;
 menu_audio_both.children = {
     & menu_bypass ,
     & menu_in_out ,
