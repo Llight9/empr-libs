@@ -9,75 +9,6 @@
 #define menu_type_opt         3
 #define menu_type_multi_opt   4
 
-#define main_menu {                             \
-                   {                            \
-                        {"audio in", 8},        \
-                        {"audio out", 9},       \
-                        {"both", 4}             \
-                    }                           \
-                    {                           \
-                        {                       \
-                            {"fast", 4},        \
-                            {"normal", 6},      \
-                            {"formats", 7},     \
-                            {"quality", 7},     \
-                            {"effects", 7}      \
-                        }                       \
-                        {                       \
-                            {"playing", 7}      \
-                        }                       \
-                        {                       \
-                            {"playing", 7}      \
-                        }                       \
-                        {                       \
-                            {"lossey", 6}       \
-                            {"lossless", 8}     \
-                        }                       \
-                        {                       \
-                            {"worst", 5}        \
-                            {"bad", 3}          \
-                            {"normal", 6}       \
-                            {"good", 4}         \
-                            {"better", 6}       \
-                            {"best", 4}         \
-                        }                       \
-                    }                           \
-                    {                           \
-                        {                       \
-                            {"fast", 4},        \
-                            {"normal", 6},      \
-                            {"formats", 7},     \
-                            {"quality", 7},     \
-                            {"effects", 7}      \
-                        }                       \
-                        {                       \
-                            {"playing", 7}      \
-                        }                       \
-                        {                       \
-                            {"playing", 7}      \
-                        }                       \
-                        {                       \
-                            {"lossey", 6}       \
-                            {"lossless", 8}     \
-                        }                       \
-                        {                       \
-                            {"worst", 5}        \
-                            {"bad", 3}          \
-                            {"normal", 6}       \
-                            {"good", 4}         \
-                            {"better", 6}       \
-                            {"best", 4}         \
-                        }                       \
-                        {                       \
-                            {"none", 6}         \
-                        }                       \
-                    }                           \
-                    {                           \
-                        {"bypass", 6}           \
-                    }                           \
-                }
-
-
 typedef struct node {
     node * parent;
     int child_num;
@@ -285,7 +216,8 @@ menu_out_formats.data_type = menu_type_multi_opt;
 menu_out_formats.data_item_len = {1, 1, 1};
 
 menu_audio_both.parent = &head;
-menu_audio_both.child_num = 3;
+menu_audio_both.child_num = 0;
+menu_audio_both.data_num = 3;
 menu_audio_both.data_item = {'\0'};
 menu_audio_both.data_item[0] = "bypass";
 menu_audio_both.data_item[1] = "in out";
@@ -310,5 +242,5 @@ void exit_menu(void);
 
 
 void menu_init(){
-
+    menu_make(head.data_num, head.data_item);
 }
