@@ -27,7 +27,7 @@ typedef struct {
 } format_data;
 
 typedef struct {
-    int quality
+    int quality;
 } quality_data;
 
 typedef struct {
