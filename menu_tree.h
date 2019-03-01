@@ -8,13 +8,13 @@
 #define menu_type_multi_opt   4
 
 typedef struct {
-    node * parent;
+    typedef node * parent;
     int child_num;
     int data_num;
     char * data[data_num];
     int data_item_len[data_num];
     int data_type;
-    node * children[child_num];
+    typedef node * children[child_num];
 } node;
 
 typedef struct {
