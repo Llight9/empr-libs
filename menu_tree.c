@@ -9,14 +9,14 @@
 #define menu_type_opt         3
 #define menu_type_multi_opt   4
 
-typedef struct {
-    typedef node * parent;
+typedef struct node{
+    struct node * parent;
     int child_num;
     int data_num;
     char * data[data_num];
     int data_item_len[data_num];
     int data_type;
-    typedef node * children[child_num];
+    struct node * children[child_num];
 } node;
 
 typedef struct {
