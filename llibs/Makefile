@@ -9,7 +9,7 @@ PKG=/opt/york/cs/net
 
 # Specify the commands needed from the tool chain, CC is the C-compiler,
 # OBJCOPY converts the resulting program binary into a format we can load
-# into the MBED board 
+# into the MBED board
 ARCH=arm-none-eabi
 CC=$(ARCH)-gcc
 OBJCOPY=$(ARCH)-objcopy
@@ -36,7 +36,7 @@ LDSCRIPT = $(CMSIS)/lib/ldscript_rom_gnu.ld
 CFLAGS=-mcpu=cortex-m3  -mthumb  -Wall  -O0  -mapcs-frame  -D__thumb2__=1 \
   -msoft-float  -gdwarf-2  -mno-sched-prolog  -fno-hosted  -mtune=cortex-m3 \
   -march=armv7-m  -mfix-cortex-m3-ldrd   -ffunction-sections  -fdata-sections \
-          -D__RAM_MODE__=0 $(CMSISINCLUDES) -I. 
+          -D__RAM_MODE__=0 $(CMSISINCLUDES) -I.
 
 LDFLAGS=$(CMSISFL) -static -mcpu=cortex-m3 -mthumb -mthumb-interwork \
 	   -Wl,--start-group -L$(THUMB2GNULIB) -L$(THUMB2GNULIB2) \
@@ -46,16 +46,16 @@ LDFLAGS=$(CMSISFL) -static -mcpu=cortex-m3 -mthumb -mthumb-interwork \
 LDFLAGS+=-L$(CMSIS)/lib -lDriversLPC17xxgnu
 
 # Name of the binary being built
-EXECNAME	= bin/serial
+EXECNAME	= bin/toLPC
 
 # Source files provided by the user to build the project
-OBJ		= $(shell echo *.c | sed s/\\.c/\\.o/g)
+OBJ		= toLPC.o usbIO.o ledIO.o lcdIO.o lcd_menu.o delay.o
 
 # Commands handled by this makefile
-all:	serial
+all: 	toLPC
 	@echo "Build finished"
 
-serial: $(OBJ)
+toLPC: $(OBJ)
 	mkdir -p bin # prevent error "No such file or directory" during linking
 	$(CC) -o $(EXECNAME) $(OBJ) $(LDFLAGS)
 	$(OBJCOPY) -I elf32-little -O binary $(EXECNAME) $(EXECNAME).bin

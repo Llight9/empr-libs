@@ -1,0 +1,141 @@
+change_bitmap    function   1331 ff.c             static FRESULT change_bitmap (
+check_fs         function   3185 ff.c             static BYTE check_fs ( /* 0:FAT, 1:exFAT, 2:Valid BS but not FAT, 3:Not a BS, 4:Disk error */
+chk_chr          function    693 ff.c             static int chk_chr (const char* str, int chr) /* NZ:contained, ZR:not contained */
+chk_lock         function    934 ff.c             static FRESULT chk_lock ( /* Check if the file can be accessed */
+clear_lock       function   1023 ff.c             static void clear_lock ( /* Clear lock entries of the volume */
+clmt_clust       function   1614 ff.c             static DWORD clmt_clust ( /* <2:Error, >=2:Cluster number */
+clst2sect        function   1132 ff.c             static DWORD clst2sect ( /* !=0:Sector number, 0:Failed (invalid cluster#) */
+cmp_lfn          function   1871 ff.c             static int cmp_lfn ( /* 1:matched, 0:not matched */
+create_chain     function   1511 ff.c             static DWORD create_chain ( /* 0:No free cluster, 1:Internal error, 0xFFFFFFFF:Disk error, >=2:New cluster# */
+create_name      function   2827 ff.c             static FRESULT create_name ( /* FR_OK: successful, FR_INVALID_NAME: could not create */
+create_xdir      function   2288 ff.c             static void create_xdir (
+dbc_1st          function    701 ff.c             static int dbc_1st (BYTE c)
+dbc_2nd          function    721 ff.c             static int dbc_2nd (BYTE c)
+dec_lock         function   1001 ff.c             static FRESULT dec_lock ( /* Decrement object open counter */
+deselect         function    262 mmc_176x_ssp.c   void deselect (void)
+dir_alloc        function   1792 ff.c             static FRESULT dir_alloc ( /* FR_OK(0):succeeded, !=0:error */
+dir_clear        function   1644 ff.c             static FRESULT dir_clear ( /* Returns FR_OK or FR_DISK_ERR */
+dir_find         function   2412 ff.c             static FRESULT dir_find ( /* FR_OK(0):succeeded, !=0:error */
+dir_next         function   1731 ff.c             static FRESULT dir_next ( /* FR_OK(0):succeeded, FR_NO_FILE:End of table, FR_DENIED:Could not stretch */
+dir_read         function   2334 ff.c             static FRESULT dir_read (
+dir_register     function   2493 ff.c             static FRESULT dir_register ( /* FR_OK:succeeded, FR_DENIED:no free entry or too many SFN collision, FR_DISK_ERR:disk error */
+dir_remove       function   2599 ff.c             static FRESULT dir_remove ( /* FR_OK:Succeeded, FR_DISK_ERR:A disk error */
+dir_sdi          function   1683 ff.c             static FRESULT dir_sdi ( /* FR_OK(0):succeeded, !=0:error */
+disk_initialize  function    438 mmc_176x_ssp.c   DSTATUS disk_initialize (
+disk_ioctl       function    587 mmc_176x_ssp.c   DRESULT disk_ioctl (
+disk_read        function    511 mmc_176x_ssp.c   DRESULT disk_read (
+disk_status      function    496 mmc_176x_ssp.c   DSTATUS disk_status (
+disk_timerproc   function    741 mmc_176x_ssp.c   void disk_timerproc (void)
+disk_write       function    545 mmc_176x_ssp.c   DRESULT disk_write (
+enq_lock         function    961 ff.c             static int enq_lock (void) /* Check if an entry is available for a new object */
+f_chdir          function   4090 ff.c             FRESULT f_chdir (
+f_chdrive        function   4073 ff.c             FRESULT f_chdrive (
+f_chmod          function   5059 ff.c             FRESULT f_chmod (
+f_close          function   4037 ff.c             FRESULT f_close (
+f_closedir       function   4479 ff.c             FRESULT f_closedir (
+f_expand         function   5368 ff.c             FRESULT f_expand (
+f_fdisk          function   5994 ff.c             FRESULT f_fdisk (
+f_findfirst      function   4570 ff.c             FRESULT f_findfirst (
+f_findnext       function   4545 ff.c             FRESULT f_findnext (
+f_forward        function   5458 ff.c             FRESULT f_forward (
+f_getcwd         function   4152 ff.c             FRESULT f_getcwd (
+f_getfree        function   4632 ff.c             FRESULT f_getfree (
+f_getlabel       function   5153 ff.c             FRESULT f_getlabel (
+f_gets           function   6077 ff.c             TCHAR* f_gets (
+f_lseek          function   4252 ff.c             FRESULT f_lseek (
+f_mkdir          function   4865 ff.c             FRESULT f_mkdir (
+f_mkfs           function   5529 ff.c             FRESULT f_mkfs (
+f_mount          function   3497 ff.c             FRESULT f_mount (
+f_open           function   3545 ff.c             FRESULT f_open (
+f_opendir        function   4413 ff.c             FRESULT f_opendir (
+f_printf         function   6413 ff.c             int f_printf (
+f_putc           function   6373 ff.c             int f_putc (
+f_puts           function   6393 ff.c             int f_puts (
+f_read           function   3735 ff.c             FRESULT f_read (
+f_readdir        function   4509 ff.c             FRESULT f_readdir (
+f_rename         function   4949 ff.c             FRESULT f_rename (
+f_setcp          function   6531 ff.c             FRESULT f_setcp (
+f_setlabel       function   5248 ff.c             FRESULT f_setlabel (
+f_stat           function   4597 ff.c             FRESULT f_stat (
+f_sync           function   3956 ff.c             FRESULT f_sync (
+f_truncate       function   4721 ff.c             FRESULT f_truncate (
+f_unlink         function   4771 ff.c             FRESULT f_unlink (
+f_utime          function   5106 ff.c             FRESULT f_utime (
+f_write          function   3835 ff.c             FRESULT f_write (
+ff_oem2uni       function   15248 ffunicode.c      WCHAR ff_oem2uni ( /* Returns Unicode character, zero on error */
+ff_oem2uni       function   15315 ffunicode.c      WCHAR ff_oem2uni ( /* Returns Unicode character, zero on error */
+ff_oem2uni       function   15414 ffunicode.c      WCHAR ff_oem2uni ( /* Returns Unicode character, zero on error */
+ff_uni2oem       function   15226 ffunicode.c      WCHAR ff_uni2oem ( /* Returns OEM code character, zero on error */
+ff_uni2oem       function   15279 ffunicode.c      WCHAR ff_uni2oem ( /* Returns OEM code character, zero on error */
+ff_uni2oem       function   15362 ffunicode.c      WCHAR ff_uni2oem ( /* Returns OEM code character, zero on error */
+ff_wtoupper      function   15468 ffunicode.c      DWORD ff_wtoupper ( /* Returns up-converted code point */
+file_exists      function     51 files.c          int file_exists(char * filename)
+fill_first_frag  function   1367 ff.c             static FRESULT fill_first_frag (
+fill_last_frag   function   1390 ff.c             static FRESULT fill_last_frag (
+find_bitmap      function   1291 ff.c             static DWORD find_bitmap ( /* 0:Not found, 2..:Cluster block found, 0xFFFFFFFF:Disk error */
+find_volume      function   3212 ff.c             static FRESULT find_volume ( /* FR_OK(0): successful, !=0: an error occurred */
+follow_path      function   3024 ff.c             static FRESULT follow_path ( /* FR_OK(0): successful, !=0: error code */
+gen_numname      function   1982 ff.c             static void gen_numname (
+get_achar        function   2749 ff.c             static DWORD get_achar ( /* Get a character and advances ptr */
+get_fat          function   1149 ff.c             static DWORD get_fat ( /* 0xFFFFFFFF:Disk error, 1:Internal error, 2..0x7FFFFFFF:Cluster status */
+get_fileinfo     function   2645 ff.c             static void get_fileinfo (
+get_ldnumber     function   3111 ff.c             static int get_ldnumber ( /* Returns logical drive number (-1:invalid drive number or null pointer) */
+get_xfileinfo    function   2117 ff.c             static void get_xfileinfo (
+inc_lock         function    970 ff.c             static UINT inc_lock ( /* Increment object open counter and returns its index (0:Internal error) */
+init_alloc_info  function   2209 ff.c             static void init_alloc_info (
+ld_clust         function   1834 ff.c             static DWORD ld_clust ( /* Returns the top cluster value of the SFN entry */
+ld_dword         function    589 ff.c             static DWORD ld_dword (const BYTE* ptr) /* Load a 4-byte little-endian word */
+ld_qword         function    601 ff.c             static QWORD ld_qword (const BYTE* ptr) /* Load an 8-byte little-endian word */
+ld_word          function    580 ff.c             static WORD ld_word (const BYTE* ptr) /* Load a 2-byte little-endian word */
+list_files       function     41 files.c          int list_files()
+load_obj_xdir    function   2227 ff.c             static FRESULT load_obj_xdir (
+load_xdir        function   2158 ff.c             static FRESULT load_xdir ( /* FR_INT_ERR: invalid entry block */
+lock_fs          function    907 ff.c             static int lock_fs ( /* 1:Ok, 0:timeout */
+main             function    236 files.c          int main()
+mem_cmp          function    679 ff.c             static int mem_cmp (const void* dst, const void* src, UINT cnt) /* ZR:same, NZ:different */
+mem_cpy          function    654 ff.c             static void mem_cpy (void* dst, const void* src, UINT cnt)
+mem_set          function    668 ff.c             static void mem_set (void* dst, int val, UINT cnt)
+menu_tree_init   function    240 menu_tree.c      void menu_tree_init(){
+mkdir_test       function    227 files.c          int mkdir_test(char * dir_name)
+move_window      function   1064 ff.c             static FRESULT move_window ( /* Returns FR_OK or FR_DISK_ERR */
+pattern_matching function   2780 ff.c             static int pattern_matching ( /* 0:not matched, 1:matched */
+pick_lfn         function   1907 ff.c             static int pick_lfn ( /* 1:succeeded, 0:buffer overflow or invalid LFN entry */
+power_off        function    310 mmc_176x_ssp.c   void power_off (void) /* Disable SPI function */
+power_on         function    293 mmc_176x_ssp.c   void power_on (void) /* Enable SSP module and attach it to I/O pads */
+put_fat          function   1226 ff.c             static FRESULT put_fat ( /* FR_OK(0):succeeded, !=0:error */
+put_lfn          function   1945 ff.c             static void put_lfn (
+put_utf          function    818 ff.c             static BYTE put_utf ( /* Returns number of encoding units written (0:buffer overflow or wrong encoding) */
+putc_bfd         function   6218 ff.c             static void putc_bfd ( /* Buffered write with code conversion */
+putc_flush       function   6349 ff.c             static int putc_flush ( /* Flush left characters in the buffer */
+putc_init        function   6362 ff.c             static void putc_init ( /* Initialize write buffer */
+rcvr_datablock   function    323 mmc_176x_ssp.c   int rcvr_datablock ( /* 1:OK, 0:Error */
+rcvr_spi_multi   function    157 mmc_176x_ssp.c   void rcvr_spi_multi (
+read_usb_serial_none_blocking function     17 usbIO.c          int read_usb_serial_none_blocking(char *buf,int length)
+remove_chain     function   1416 ff.c             static FRESULT remove_chain ( /* FR_OK(0):succeeded, !=0:error */
+scan_files       function      7 files.c          int scan_files (
+select           function    275 mmc_176x_ssp.c   int select (void) /* 1:OK, 0:Timeout */
+send_cmd         function    384 mmc_176x_ssp.c   BYTE send_cmd ( /* Return value: R1 resp (bit7==1:Failed to send) */
+serial_init      function     28 usbIO.c          void serial_init(void)
+st_clust         function   1851 ff.c             static void st_clust (
+st_dword         function    624 ff.c             static void st_dword (BYTE* ptr, DWORD val) /* Store a 4-byte word in little-endian */
+st_qword         function    633 ff.c             static void st_qword (BYTE* ptr, QWORD val) /* Store an 8-byte word in little-endian */
+st_word          function    618 ff.c             static void st_word (BYTE* ptr, WORD val) /* Store a 2-byte word in little-endian */
+store_xdir       function   2256 ff.c             static FRESULT store_xdir (
+sum_sfn          function   2040 ff.c             static BYTE sum_sfn (
+sync_fs          function   1095 ff.c             static FRESULT sync_fs ( /* Returns FR_OK or FR_DISK_ERR */
+sync_window      function   1042 ff.c             static FRESULT sync_window ( /* Returns FR_OK or FR_DISK_ERR */
+tchar2uni        function    745 ff.c             static DWORD tchar2uni ( /* Returns character in UTF-16 encoding (>=0x10000 on double encoding unit, 0xFFFFFFFF on decode error) */
+test_append      function     74 files.c          int test_append(char * filename, char * contents, int len)
+test_opening     function    150 files.c          int test_opening(char * filename)
+test_read_part   function    105 files.c          unsigned short * test_read_part(char * filename, int mode)
+test_write       function    196 files.c          int test_write(char * filename, char * contents, int len)
+unlock_fs        function    915 ff.c             static void unlock_fs (
+validate         function   3453 ff.c             static FRESULT validate ( /* Returns FR_OK or FR_INVALID_OBJECT */
+wait_ready       function    237 mmc_176x_ssp.c   int wait_ready ( /* 1:Ready, 0:Timeout */
+write_usb_serial_blocking function     23 usbIO.c          int write_usb_serial_blocking(char *buf,int length)
+xchg_spi         function    145 mmc_176x_ssp.c   BYTE xchg_spi (
+xdir_sum         function   2062 ff.c             static WORD xdir_sum ( /* Get checksum of the directoly entry block */
+xmit_datablock   function    354 mmc_176x_ssp.c   int xmit_datablock ( /* 1:OK, 0:Failed */
+xmit_spi_multi   function    196 mmc_176x_ssp.c   void xmit_spi_multi (
+xname_sum        function   2083 ff.c             static WORD xname_sum ( /* Get check sum (to be used as hash) of the file name */
+xsum32           function   2101 ff.c             static DWORD xsum32 ( /* Returns 32-bit checksum */

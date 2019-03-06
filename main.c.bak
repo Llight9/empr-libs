@@ -1,0 +1,401 @@
+#include "files.h"
+#include "usbIO.h"
+//#include "audio.c"
+
+/***********************************************************************/
+
+/*
+	USEFUL REF:
+		https://os.mbed.com/users/macaba/code/i2s/file/6d43d111bdc1/i2s/dma.cpp/
+		https://vle.york.ac.uk/bbcswebdav/pid-2848390-dt-content-rid-7067324_2/courses/Y2018-006400/2015-16/CMSIS/examples/html/link__list_8c_source.html
+		https://vle.york.ac.uk/bbcswebdav/pid-2848390-dt-content-rid-7067324_2/courses/Y2018-006400/2015-16/CMSIS/examples/html/dac__sinewave__test_8c_source.html
+		https://vle.york.ac.uk/bbcswebdav/pid-2848390-dt-content-rid-7067324_2/courses/Y2018-006400/2015-16/CMSIS/examples/html/spi__sdcard_8c_source.html
+		https://vle.york.ac.uk/bbcswebdav/pid-2848390-dt-content-rid-7067324_2/courses/Y2018-006400/2015-16/CMSIS/examples/html/i2s__dma__test_8c_source.html
+*/
+#include "lpc17xx_i2s.h"
+//#include "lpc17xx_libcfg.h"
+#include "lpc17xx_pinsel.h"
+#include "debug_frmwrk.h"
+#include "lpc17xx_spi.h"
+#include "lpc17xx_gpdma.h"
+#include "lpc17xx_gpio.h"
+//#include "empr-libs/screenIO.h"
+//#include "empr-libs/ledIO.h"
+//#include "empr-libs/delay.h"
+
+//#define BUFFER_SIZE             0x400
+#define I2S_BUFFER_SRC          LPC_AHBRAM1_BASE
+#define I2S_BUFFER_DST          (I2S_BUFFER_SRC+0x1000UL)
+#define CS_PORT_NUM             0
+#define CS_PIN_NUM              11
+
+#define BUFFER_SIZE                     0x018
+
+#define DMA_SIZE                0x100UL
+
+#define DMA_SRC                 LPC_AHBRAM1_BASE
+
+#define DMA_DST                 (DMA_SRC+DMA_SIZE)
+
+// Terminal Counter flag for Channel 0
+__IO uint32_t Channel0_TC;
+
+// Error Counter flag for Channel 0
+__IO uint32_t Channel0_Err;
+
+volatile uint32_t *I2STXBuffer = (uint32_t*)(DMA_SRC);
+
+/* TLV320AIC23B REGISTER ADDRESSES
+		Each reg has a 7 bit address...
+		these have been left shifted by 9
+		for spi.
+*/
+
+//Controls left input channel volume 0x00
+#define MBEDAUDIO_REG_LMIC  0x00
+//Controls right input channel volume 0x01
+#define MBEDAUDIO_REG_RMIC  0x200
+//Controls left headphone channel volume 0x02
+#define MBEDAUDIO_REG_LOUT  0x400
+//Controls right headphone channel volume 0x03
+#define MBEDAUDIO_REG_ROUT  0x600
+//Controls the analog path register 0x04
+#define MBEDAUDIO_REG_ANALOGPATH  0x800
+//Controls the digital path register 0x05
+#define MBEDAUDIO_REG_DIGITALPATH  0xA00
+//Controls power to various components i.e. DAC 0x06
+#define MBEDAUDIO_REG_POWER  0xC00
+//Controls the digital interface path i.e. filters 0x07
+#define MBEDAUDIO_REG_DIGITALINTERFACE  0xE00
+//Controls the sample rate 0x08
+#define MBEDAUDIO_REG_SAMPLERATE  0x1000
+//Enables various digital components 0x09
+#define MBEDAUDIO_REG_DIGITALACTIVATION  0x1200
+//Resets all registers to their default state 0x0F
+#define MBEDAUDIO_REG_RESET 0x1E00
+
+PINSEL_CFG_Type PinCfg;
+
+SPI_DATA_SETUP_Type xferConfig;
+
+
+void Delay (unsigned long tick) {
+    unsigned long j;
+    for (j = 0; j < tick; j++){
+        unsigned int i;
+        for (i = 0;i < 0x100000;i++) {
+        }
+    }
+}
+
+/*-------------------------INTERUPTS------------------------------*/
+/*********************************************************************/
+void DMA_IRQHandler (void)
+{
+
+        // check GPDMA interrupt on channel 0
+        if (GPDMA_IntGetStatus(GPDMA_STAT_INT, 0)){ //check interrupt status on channel 0
+                // Check counter terminal status
+                if(GPDMA_IntGetStatus(GPDMA_STAT_INTTC, 0)){
+                        // Clear terminate counter Interrupt pending
+                        GPDMA_ClearIntPending (GPDMA_STATCLR_INTTC, 0);
+                                Channel0_TC++;
+			//	write_leds(14);
+                }
+                // Check error terminal status
+                if (GPDMA_IntGetStatus(GPDMA_STAT_INTERR, 0)){
+                        // Clear error counter Interrupt pending
+                        GPDMA_ClearIntPending (GPDMA_STATCLR_INTERR, 0);
+                        Channel0_Err++;
+		//	write_leds(15);
+                }
+        }
+}
+
+/*-------------------------FUNCTIONS------------------------------*/
+/*********************************************************************/
+
+void CS_Force(int32_t state){
+    switch (state) {
+        case 1:
+            GPIO_SetValue(CS_PORT_NUM, (1<<CS_PIN_NUM));
+            break;
+        default:
+            GPIO_ClearValue(CS_PORT_NUM, (1<<CS_PIN_NUM));
+            break;
+    }
+}
+
+uint32_t SD_SendReceiveData_Polling(void* tx_buf, void* rx_buf, uint32_t length){
+	CS_Force(0);
+	xferConfig.tx_data = tx_buf;
+	xferConfig.rx_data = rx_buf;
+	xferConfig.length = length;
+	SPI_ReadWrite(LPC_SPI, &xferConfig, SPI_TRANSFER_POLLING);
+	CS_Force(1);
+	return xferConfig.counter;
+}
+
+void spi_init(void){
+	SPI_CFG_Type SPI_cfgstruct;
+	PinCfg.Funcnum = 0;
+	PinCfg.OpenDrain = 0;
+	PinCfg.Pinmode = 0;
+	PinCfg.Portnum = 0;
+	PinCfg.Pinnum = 11;
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Funcnum = 3;
+	PinCfg.Pinnum = 18;
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 17;
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 15;
+	PINSEL_ConfigPin(&PinCfg);
+	SPI_ConfigStructInit(&SPI_cfgstruct);
+	SPI_cfgstruct.Databit = SPI_DATABIT_16;
+	SPI_Init(LPC_SPI, &SPI_cfgstruct);
+    GPIO_SetDir(CS_PORT_NUM, (1<<CS_PIN_NUM), 1);
+    GPIO_SetValue(CS_PORT_NUM, (1<<CS_PIN_NUM));
+}
+
+void its_init(void){
+	I2S_CFG_Type I2S_ConfigStruct;
+	I2S_MODEConf_Type I2S_ClkConfig;
+	PinCfg.Funcnum = 1;
+	PinCfg.OpenDrain = 0;
+	PinCfg.Pinmode = 0;
+	PinCfg.Pinnum = 4;
+	PinCfg.Portnum = 0;
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 5;
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 6;
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 7;
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 8;
+	PINSEL_ConfigPin(&PinCfg);
+	PinCfg.Pinnum = 9;
+	PINSEL_ConfigPin(&PinCfg);
+	I2S_Init(LPC_I2S);
+    /*
+	I2S_ConfigStruct.wordwidth = I2S_WORDWIDTH_16;
+	I2S_ConfigStruct.mono = I2S_STEREO;
+	I2S_ConfigStruct.stop = I2S_STOP_ENABLE;
+	I2S_ConfigStruct.reset = I2S_RESET_ENABLE;
+	I2S_ConfigStruct.ws_sel = I2S_MASTER_MODE;
+	I2S_ConfigStruct.mute = I2S_MUTE_DISABLE;
+	I2S_Config(LPC_I2S,I2S_TX_MODE,&I2S_ConfigStruct);
+	I2S_ConfigStruct.ws_sel = I2S_SLAVE_MODE;
+	I2S_Config(LPC_I2S,I2S_RX_MODE,&I2S_ConfigStruct);
+	I2S_ClkConfig.clksel = I2S_CLKSEL_FRDCLK;
+	I2S_ClkConfig.fpin = I2S_4PIN_DISABLE;
+	I2S_ClkConfig.mcena = I2S_MCLK_DISABLE;
+	I2S_ModeConfig(LPC_I2S,&I2S_ClkConfig,I2S_TX_MODE);
+	I2S_ModeConfig(LPC_I2S,&I2S_ClkConfig,I2S_RX_MODE);
+	I2S_FreqConfig(LPC_I2S, 48000, I2S_TX_MODE);
+	I2S_SetBitRate(LPC_I2S, 0, I2S_RX_MODE);
+    */
+	I2S_ConfigStruct.wordwidth = I2S_WORDWIDTH_16;
+	I2S_ConfigStruct.mono = I2S_MONO;
+	I2S_ConfigStruct.stop = I2S_STOP_ENABLE;
+	I2S_ConfigStruct.reset = I2S_RESET_ENABLE;
+	I2S_ConfigStruct.ws_sel = I2S_MASTER_MODE;
+	I2S_ConfigStruct.mute = I2S_MUTE_DISABLE;
+	I2S_Config(LPC_I2S,I2S_TX_MODE,&I2S_ConfigStruct);
+	I2S_ConfigStruct.ws_sel = I2S_SLAVE_MODE;
+	I2S_Config(LPC_I2S,I2S_RX_MODE,&I2S_ConfigStruct);
+	I2S_ClkConfig.clksel = I2S_CLKSEL_FRDCLK;
+	I2S_ClkConfig.fpin = I2S_4PIN_DISABLE;
+	I2S_ClkConfig.mcena = I2S_MCLK_DISABLE;
+	I2S_ModeConfig(LPC_I2S,&I2S_ClkConfig,I2S_TX_MODE);
+	I2S_ModeConfig(LPC_I2S,&I2S_ClkConfig,I2S_RX_MODE);
+	I2S_FreqConfig(LPC_I2S, 16000, I2S_TX_MODE);
+	I2S_SetBitRate(LPC_I2S, 0, I2S_RX_MODE);
+}
+
+/*********************************************************************/
+/*********************************************************************/
+#include <stdio.h>
+int main()
+{
+  serial_init();
+  write_usb_serial_blocking("-----------------reset------------------\r\n",42);
+  //test_append("pont.txt", " why am i here", 14);
+  //file_exists("pont.txt");
+  //test_opening("test");
+  //unsigned short * i;
+  unsigned short * temp = test_read_part("/test1.raw");
+  int j;
+/*  for(j = 0; j<1000;j++)
+  {
+    char test[10];
+    int help = sprintf(test, "%x ", *(temp++));
+    write_usb_serial_blocking(test, help);
+  }*/
+  write_usb_serial_blocking("nextpart\r\n",10);
+  //test_read_part("test1.raw");
+  temp = test_read_part("/test1.raw");
+  temp = test_read_part("/test1.raw");
+  temp = test_read_part("/test1.raw");
+  temp = test_read_part("/test1.raw");
+  temp = test_read_part("/test1.raw");
+  temp = test_read_part("/test1.raw");
+  temp = test_read_part("/test1.raw");
+  temp = test_read_part("/test1.raw");
+/*  for(j = 0; j<1000;j++)
+    {
+      char test[10];
+      int help = sprintf(test, "%x ", *(temp++));
+      write_usb_serial_blocking(test, help);
+    }*/
+  //write_usb_serial_blocking("nextpart\r\n",10);
+  //test_read_part("test1.raw");
+//  write_usb_serial_blocking("nextpart\r\n",10);
+//  test_read_part("test1.raw");
+  //list_files();
+  write_usb_serial_blocking("------------------end-------------------\r\n",42);
+
+  volatile uint32_t ITSBUFF[24] ={
+		0x00008000,
+		0x0000a120,
+		0x0000bfff,
+		0x0000da82,
+		0x0000eed9,
+		0x0000fba2,
+		0x0000ffff,
+		0x0000fba2,
+		0x0000eed9,
+		0x0000da82,
+		0x0000bfff,
+		0x0000a120,
+		0x00008000,
+		0x00005edf,
+		0x00004000,
+		0x0000257d,
+		0x00001126,
+		0x0000045d,
+		0x00000000,
+		0x0000045d,
+		0x00001126,
+		0x0000257d,
+		0x00004000,
+		0x00005edf};
+
+	//I2STXBuffer=itsbuff;
+	GPDMA_LLI_Type DMA_LLI_Struct;
+	GPDMA_Channel_CFG_Type GPDMACfg;
+	I2S_DMAConf_Type I2S_DMAStruct;
+	//screen_init();
+	//screen_breakline();
+	// SPI DO NOT CHANGE THIS EVER
+	debug_frmwrk_init();
+	_DBG_("Program Start\n\r");
+	spi_init();
+	uint32_t i;
+	// Config for bypass
+//	uint16_t transmitbuffer[11]={0x1E00, 0x001F, 0x1201, 0x10000, 0x0E02, 0x0C00, 0x0A01, 0x0810, 0x0017, 0x0217, 0x05FF};
+	uint16_t transmitbuffer[11]={(MBEDAUDIO_REG_RESET|0x0),
+		(MBEDAUDIO_REG_LMIC|0x1F),
+		(MBEDAUDIO_REG_RMIC|0x1F),
+		(MBEDAUDIO_REG_ANALOGPATH|0x10),
+		(MBEDAUDIO_REG_DIGITALPATH|0x04),
+		(MBEDAUDIO_REG_POWER|0x07),
+		(MBEDAUDIO_REG_DIGITALINTERFACE|0x2),
+		(MBEDAUDIO_REG_SAMPLERATE|0x0C),
+		(MBEDAUDIO_REG_DIGITALACTIVATION|0x1),
+		(MBEDAUDIO_REG_LOUT|0xFF),
+		(MBEDAUDIO_REG_ROUT|0xFF)
+};
+
+	for(i=0;i<11;i++) SD_SendReceiveData_Polling(&transmitbuffer[i],NULL, 2);
+	// I2S
+	its_init();
+
+        /* Initialize GPDMA controller */
+        GPDMA_Init();
+        LPC_GPDMA->DMACConfig = 0x01;
+        /* Setting GPDMA interrupt */
+     	// Disable interrupt for DMA
+     	NVIC_DisableIRQ (DMA_IRQn);
+     	/* preemption = 1, sub-priority = 1 */
+     	NVIC_SetPriority(DMA_IRQn, ((0x01<<3)|0x01));
+    // Create simple DMA LLI - This refers back to itself to keep it looping.
+		DMA_LLI_Struct.SrcAddr = (uint32_t)temp; //address of memory block
+		//DMA_LLI_Struct.DstAddr = DMA_I2S_TX_FIFO; //output FIFO (this is complicated ask me for deets)
+
+		DMA_LLI_Struct.DstAddr = &LPC_I2S->I2STXFIFO;
+		DMA_LLI_Struct.NextLLI = (uint32_t*)&DMA_LLI_Struct; //Point the link list to itself so it keeps going
+		DMA_LLI_Struct.Control = 10000 //Number of entries in mem block
+												| (2<<18) //source width 32 bit
+												| (2<<21) //dest. width 32 bit
+												| (1<<26) //source increment
+												//| (1<<27) //dest increment
+												| (0<<31) //INTERRUPT ON FINISH
+                            ;
+
+	// Setup GPDMA channel --------------------------------
+        // channel 0
+		GPDMACfg.ChannelNum = 0;
+        // Source memory
+		GPDMACfg.SrcMemAddr = (uint32_t *)temp;
+        // Destination memory
+		GPDMACfg.DstMemAddr = 0;
+        // Transfer size
+		GPDMACfg.TransferSize = 10000;
+        // Transfer width - unused
+		GPDMACfg.TransferWidth = 0;
+        // Transfer type
+		GPDMACfg.TransferType = GPDMA_TRANSFERTYPE_M2P;
+        // Source connection
+		GPDMACfg.SrcConn = 0;
+        // Destination connection - unused
+		GPDMACfg.DstConn = GPDMA_CONN_I2S_Channel_0;
+        // Linker List Item - unused
+		GPDMACfg.DMALLI = (uint32_t)&DMA_LLI_Struct;
+		GPDMA_Setup(&GPDMACfg);
+		_DBG_("DMA Channel 0 setting finised...");
+        /* Reset terminal counter */
+        Channel0_TC = 0;
+        /* Reset Error counter */
+        Channel0_Err = 0;
+
+        GPDMA_ChannelCmd(0, ENABLE);
+        NVIC_EnableIRQ (DMA_IRQn);
+
+        I2S_DMAStruct.DMAIndex = I2S_DMA_1;
+        I2S_DMAStruct.depth = 8;
+        I2S_DMAConfig(LPC_I2S, &I2S_DMAStruct, I2S_TX_MODE);
+
+        I2S_Start(LPC_I2S);
+
+        I2S_DMACmd(LPC_I2S, I2S_DMA_1, I2S_TX_MODE, ENABLE);
+
+	uint32_t temprecord =100;
+//	for(i=0;i<21;i++){
+//	uint32_t itsbuff = 0x0000F000;
+//	uint32_t itsbuff = 0xCCCCCCCC;
+	//setup_leds();
+	//write_leds(1);
+	while(Channel0_TC == 0);
+	//write_leds(5);
+	Delay(100);
+
+	I2S_DMACmd(LPC_I2S, I2S_DMA_1, I2S_TX_MODE, DISABLE);
+/*
+	{
+//		I2S_Send(LPC_I2S, itsbuff);
+		I2S_Send(LPC_I2S, itsbuff[i]);
+		temprecord = I2S_Receive(LPC_I2S);
+		_DBH32(temprecord);
+		screen_write("\r\n");
+		i++;
+		if(i==24)
+		{
+			i = 0;
+		}
+	}*/
+  _DBG_("hahayes");
+
+  return 0;
+}

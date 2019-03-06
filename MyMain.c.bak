@@ -1,0 +1,121 @@
+#include <string.h>
+#include "ff.h"
+#include <stdio.h>
+#include "diskio.h"
+#include "usbIO.h"
+
+void file_exists(char * filename)
+{
+  FRESULT fr;
+  FILINFO fno;
+  FATFS fs;
+
+  f_mount(&fs, "",1);
+  fr = f_stat(filename, &fno);
+
+  switch(fr){
+    case FR_OK:
+      write_usb_serial_blocking("Found it\r\n",10);
+      break;
+    case FR_NO_FILE:
+      write_usb_serial_blocking("not found it\r\n",14);
+    default:
+      write_usb_serial_blocking("error\r\n", 7);
+  }
+
+}
+
+int test_opening(char * filename)
+{
+    FATFS FatFs;
+    FIL fil;        /* File object */
+    //char line[4096]; /* Line buffer */
+    FRESULT fr;     /* FatFs return code */
+
+    write_usb_serial_blocking("hahayes\r\n",10);
+
+    /* Register work area to the default drive */
+    f_mount(&FatFs, "", 0);
+
+    /* Open a text file */
+  //  fr = f_open(&fil, "/thisIsTheTestFile.txt", FA_READ);
+    fr = f_open(&fil, filename, FA_READ);
+    if (fr) return (int)fr;
+    int length = f_size(&fil);
+    write_usb_serial_blocking("guess not\r\n",11);
+
+    /* Read every line and display it */
+    //int length = sizeof(line);
+    char line[length];
+    f_read(&fil, line, length, &length);
+  //  line[length+1] = '\r';
+    //line[length+2] = '\n';
+    write_usb_serial_blocking(line,length);
+    write_usb_serial_blocking("\r\n", 2);
+    /* Close the file */
+    f_close(&fil);
+
+    return 0;
+}
+
+int test_write(char * filename, char * contents, int len)
+{
+  FATFS FatFs;
+  FIL fil;        /* File object */
+  char *  line = "holyfuckifthisworks"; /* Line buffer */
+  FRESULT fr;     /* FatFs return code */
+
+
+  /* Register work area to the default drive */
+  f_mount(&FatFs, "", 0);
+
+  /* Open a text file */
+  fr = f_open(&fil, filename, FA_WRITE | FA_CREATE_ALWAYS);
+  write_usb_serial_blocking("haha\r\n",6);
+  if (fr) return (int)fr;
+  write_usb_serial_blocking("just test\r\n", 12);
+  /* Read every line and display it */
+  int length = 20;
+  write_usb_serial_blocking("haha\r\n",6);
+
+  f_write(&fil, contents, len, &length);
+
+  write_usb_serial_blocking("yeet\r\n",6);
+
+  f_sync(&fil);
+  /* Close the file */
+  f_close(&fil);
+
+  return 0;
+}
+
+int mkdir_test(char * dir_name)
+{
+  FATFS FatFs;
+  f_mount(&FatFs, "", 0);
+  FRESULT res = f_mkdir(dir_name);
+  if(res) return 1;
+  return 0;
+}
+
+int main()
+{
+  serial_init();
+  write_usb_serial_blocking("-----------------reset------------------\r\n",42);
+  //write_usb_serial_blocking("file1\r\n", 7);
+  char buffer[256];
+  FRESULT result;
+//  scan_files("/");
+//  if (result == FR_OK)
+  //{
+//  strcpy(buffer, "/");
+  test_opening("/TestFile.txt");
+  //test_write("pont.txt", "this was my test bois", sizeof("this was my test bois"));
+  //test_opening();;
+  //file_exists("wut.txt");
+  write_usb_serial_blocking("-----------------end------------------\r\n",40);
+  //result = scan_files(buffer);
+  //}
+
+  return result;
+}
